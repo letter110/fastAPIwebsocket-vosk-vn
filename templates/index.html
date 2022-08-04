@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chat</title>
+</head>
+
+<body>
+    <h1>Voice Chat</h1>
+    <h2>Your ID: <span id="ws-id"></span></h2>
+    <form action="" onsubmit="sendMessage(event)">
+
+        <input type="file" id="file-upload" accept=".wav" required>
+        <button>Send</button>
+    </form>
+
+    <ul id='messages'>
+    </ul>
+    <script>
+        var client_id = Date.now()
+        document.querySelector("#ws-id").textContent = client_id;
+        var ws = new WebSocket(`ws://localhost:8000/ws/${client_id}`);
+        ws.onmessage = function (event) {
+            var messages = document.getElementById('messages')
+            var message = document.createElement('li')
+            var content = document.createTextNode(event.data)
+            message.appendChild(content)
+            messages.appendChild(message)
+        };
+        var input = document.querySelector("#file-upload");
+        const reader = new FileReader();
+        input.addEventListener("change", (event) => {
+            const files = event.target.files;
+            for (const file of files) {
+                console.log(file)
+
+            }
+            reader.readAsArrayBuffer(files[0])
+
+            // Lắng nghe quá trình đọc tập tin hoàn thành
+            reader.addEventListener("load", (event) => {
+                // Lấy chuỗi Binary thông tin hình ảnh
+                const img = event.target.result;
+
+                // Thực hiện hành động gì đó, có thể append chuỗi giá trị này vào thẻ IMG
+                console.log(img) // data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAA........
+            })
+        })
+        function sendMessage(event) {
+            ws.send(reader.result)
+            input.value = ''
+            event.preventDefault()
+        }
+
+    </script>
+</body>
+
+</html>
