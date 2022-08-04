@@ -1,7 +1,6 @@
 from vosk import Model, KaldiRecognizer
 import pyaudio
-import librosa
-model = Model('D:/Project/thuc_tap_he/vosk/vn')
+model = Model('vn')
 recognizer = KaldiRecognizer(model, 16000)
 
 ############################
@@ -18,5 +17,3 @@ recognizer = KaldiRecognizer(model, 16000)
 #         break
 #     if recognizer.AcceptWaveform(data):
 #         print(recognizer.Result())
-
-
